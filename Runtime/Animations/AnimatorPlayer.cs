@@ -13,8 +13,8 @@ namespace SensenToolkit.Animations
         #endregion
 
         #region Constructors
-        [Autofetch]
-        private void Prepare(Animator animator)
+        [LnxInit]
+        private void Init(Animator animator)
         {
             _animator = animator;
         }
