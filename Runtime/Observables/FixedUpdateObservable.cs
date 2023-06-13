@@ -3,11 +3,11 @@ using System;
 
 namespace SensenToolkit.Observables
 {
-    public class UpdateObservable : MonoBehaviour, IParameterlessObservable
+    public class FixedUpdateObservable : MonoBehaviour, IParameterlessObservable
     {
         public event Action Callbacks;
 
-        private void Update()
+        private void FixedUpdate()
         {
             Callbacks?.Invoke();
         }
