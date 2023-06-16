@@ -3,9 +3,20 @@ using InControl;
 
 namespace Sensen.Components
 {
+    public class KeyboardInputDevice : InputDevice
+    {
+        public KeyboardInputDevice()
+        {
+            Name = "native-keyboard";
+            Meta = "Default KeyboardInputDevice";
+            DeviceClass = InputDeviceClass.Keyboard;
+            DeviceStyle = InputDeviceStyle.Unknown;
+        }
+    }
+
     public class LnxInputDeviceRegistry
     {
-        public static readonly InputDevice NativeKeyboardDevice = new("native-keyboard");
+        public static readonly InputDevice NativeKeyboardDevice = new KeyboardInputDevice();
         private readonly Dictionary<string, LnxInputDevice> _devices = new();
         public LnxInputDevice GetOrCreate(InputDevice rawDevice)
         {
@@ -34,9 +45,7 @@ namespace Sensen.Components
         public static string IdentifyRawDevice(InputDevice rawDevice)
         => $"{IdentifyRawDeviceType(rawDevice)}|{rawDevice.GUID}";
 
-        public static string IdentifyRawDeviceType(InputDevice rawDevice) =>
-        rawDevice == NativeKeyboardDevice
-        ? "native-keyboard|keyboard|keyboard"
-        : $"{rawDevice.Name}|{rawDevice.DeviceClass}|{rawDevice.DeviceStyle}".ToLower();
+        public static string IdentifyRawDeviceType(InputDevice rawDevice)
+        => $"{rawDevice.Name}|{rawDevice.DeviceClass}|{rawDevice.DeviceStyle}".ToLower();
     }
 }

@@ -28,7 +28,7 @@ namespace Sensen.Components
 
         private void AttachDevice(LnxInputDevice device)
         {
-            Debug.Log($"Device ATTACHED waiting to be Activated: {device.Id}");
+            Debug.Log($"Device ATTACHED waiting to be Activated: {device.Id} keyboard={device.IsKeyboard}");
             DeviceActivationRequestObserver activationObserver = new((LnxInputDevice)device, _updateObservable);
             activationObserver.OnActivationRequest += RequestActivation;
             _activationObservers.Add(device.Id, activationObserver);
@@ -37,6 +37,8 @@ namespace Sensen.Components
         private void DetachDevice(LnxInputDevice device)
         {
             Debug.Log($"Device DETACHED: {device.Id}");
+            _activeDevices.Remove(device.Id);
+            DisposeActivationObserverOf(device);
             OnDetached?.Invoke(device);
         }
 
@@ -48,11 +50,16 @@ namespace Sensen.Components
 
         private void FinishActivation(LnxInputDevice device)
         {
+            DisposeActivationObserverOf(device);
+            _activeDevices.Add(device.Id, device);
+        }
+
+        private void DisposeActivationObserverOf(LnxInputDevice device)
+        {
             DeviceActivationRequestObserver activationObserver = _activationObservers.GetValueOrDefault(device.Id);
             if (activationObserver == null) return;
             activationObserver.Dispose();
             _activationObservers.Remove(device.Id);
-            _activeDevices.Add(device.Id, device);
         }
 
         private void SubscribeToInControlAttachEvents()
