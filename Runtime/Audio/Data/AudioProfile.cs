@@ -12,6 +12,9 @@ namespace Sensen.Components
         public bool RandomizeClips { get; private set; } = false;
         [field: SerializeField]
         public AudioTrack Track { get; private set; }
+        [field: SerializeField]
+        [field: Range(0f, 1f)]
+        public float Volume { get; private set; } = 1f;
         private RandomWithVariability _random;
         private RandomWithVariability VarRandom => _random ??= new(
             optionsAmount: Clips.Length,
@@ -28,7 +31,7 @@ namespace Sensen.Components
         {
             return new AudioPlaybackCommand(
                 clip: ChooseClip(),
-                volume: PlaybackProfile.Volume,
+                volume: PlaybackProfile.Volume * Volume,
                 loop: PlaybackProfile.Loop,
                 pitch: PlaybackProfile.ChoosePitch(),
                 track: track ?? Track ?? AudioTrack.Global
