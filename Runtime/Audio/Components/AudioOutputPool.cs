@@ -6,6 +6,7 @@ namespace Sensen.Components
 {
     public class AudioOutputPool : PrefabPoolBase<AudioOutput, AudioSource>
     {
+        [SerializeField] private bool _debug;
         private const float PitchPrecision = 1e2f;
         private readonly Dictionary<int, AudioOutput> _pitchedOutputs = new();
         private readonly Dictionary<int, int> _pitchedOutputsCount = new();
@@ -28,6 +29,10 @@ namespace Sensen.Components
 
         public override void Release(AudioOutput releasingOutput)
         {
+            if (_debug)
+            {
+                Debug.Log($"[{nameof(AudioOutputPool)}] Releasing Output {releasingOutput.SourceName}");
+            }
             int pitchKey = Mathf.RoundToInt(releasingOutput.Pitch * PitchPrecision);
             _pitchedOutputs.TryGetValue(pitchKey, out AudioOutput output);
             if (output == null || output != releasingOutput)

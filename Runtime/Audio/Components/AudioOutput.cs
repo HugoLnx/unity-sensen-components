@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using SensenToolkit.Coroutines;
 using UnityEngine;
 
 namespace Sensen.Components
@@ -105,7 +106,7 @@ namespace Sensen.Components
             while (true)
             {
                 yield return new WaitUntil(() => _source.isPlaying);
-                yield return new WaitWhile(() => _source.isPlaying);
+                yield return new WaitWhile(() => Time.timeScale == 0 || !Application.isFocused || !Application.isPlaying || _source.isPlaying);
                 IsPlaying = false;
                 OnFinishedPlaying?.Invoke(this);
             }
