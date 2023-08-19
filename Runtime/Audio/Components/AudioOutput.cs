@@ -31,16 +31,16 @@ namespace Sensen.Components
             _mono.StartCoroutine(MonitorLoop());
         }
 
-        public void Play(AudioPlaybackCommand command)
+        public void Play(AudioPlaybackCommand command, Action onFinished = null)
         {
             IsPlaying = true;
             Volume = command.Volume;
             Loop = command.Loop;
             Pitch = command.Pitch;
-            Play(command.Clip);
+            Play(command.Clip, onFinished);
         }
 
-        public void Play(AudioClip clip)
+        public void Play(AudioClip clip, Action onFinished = null)
         {
             IsPlaying = true;
             RefreshSource();
@@ -52,6 +52,10 @@ namespace Sensen.Components
             else {
                 _source.clip = null;
                 _source.PlayOneShot(clip, Volume);
+            }
+            if (onFinished != null)
+            {
+                _mono.StartCoroutine(ScheduleOnFinished(onFinished, clip.length));
             }
         }
 
@@ -105,6 +109,12 @@ namespace Sensen.Components
                 IsPlaying = false;
                 OnFinishedPlaying?.Invoke(this);
             }
+        }
+
+        private IEnumerator ScheduleOnFinished(Action onFinished, float clipLength)
+        {
+            yield return new WaitForSeconds(clipLength);
+            onFinished?.Invoke();
         }
     }
 }

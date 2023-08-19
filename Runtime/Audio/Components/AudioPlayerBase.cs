@@ -1,3 +1,4 @@
+using System;
 using LnxArch;
 using UnityEngine;
 
@@ -17,11 +18,12 @@ namespace Sensen.Components
             _outputPool = outputPool;
         }
 
-        public void Play(AudioProfile profile, AudioTrack track = null)
+        public void Play(AudioProfile profile, AudioTrack track = null, Action onFinished = null)
         {
-            Play(profile.GetCommand(track: track));
+            Play(profile.GetCommand(track: track), onFinished);
         }
-        public void Play(AudioPlaybackCommand command)
+
+        public void Play(AudioPlaybackCommand command, Action onFinished = null)
         {
             AudioOutput output = command.Loop || command.UseGlobalTrack ? _outputPool?.Get() : _outputPool?.GetReusable(command.Pitch);
             if (output == null)
@@ -31,7 +33,7 @@ namespace Sensen.Components
             }
             output.UpdateVolume(modifier: _globalVolume);
             output.UpdateTrack(command.Track);
-            output.Play(command);
+            output.Play(command, onFinished);
         }
         public void SetIsAudible(bool isAudible)
         {
