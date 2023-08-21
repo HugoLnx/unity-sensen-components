@@ -4,6 +4,7 @@ namespace Sensen.Components
     {
         Slow,
         Normal,
+        NormalFast,
         Fast,
         Immediate
     }
