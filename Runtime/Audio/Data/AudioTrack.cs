@@ -35,6 +35,15 @@ namespace Sensen.Components
             RefreshOutputs();
         }
 
+        public void Stop()
+        {
+            foreach (AudioOutput output in _outputs)
+            {
+                output.Stop();
+            }
+            _outputs.Clear();
+        }
+
         private void RefreshOutputs()
         {
             foreach (AudioOutput output in _outputs)
