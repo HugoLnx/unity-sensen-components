@@ -1,7 +1,9 @@
+#if DOTWEEN
 using System;
 using LnxArch;
 using UnityEngine;
 using DG.Tweening;
+using System.Diagnostics;
 
 namespace Sensen.Components
 {
@@ -94,3 +96,4 @@ namespace Sensen.Components
         }
     }
 }
+#endif
