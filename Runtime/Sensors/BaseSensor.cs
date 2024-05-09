@@ -16,12 +16,18 @@ namespace SensenToolkit.Sensors
         public Transform OneSensed => IsSensing ? GetOneSensed() : null;
         #endregion
 
+        #region Events
+        public event Action<Collider> OnSensedEnter;
+        public event Action<Collider> OnSensedExit;
+        #endregion
+
         #region Lifecycle
         protected void OnEnter(Collider other)
         {
             if (IsValid(other))
             {
                 Sensed.Add(other.transform);
+                OnSensedEnter?.Invoke(other);
             }
         }
 
@@ -34,6 +40,7 @@ namespace SensenToolkit.Sensors
                 {
                     _oneSensed = null;
                 }
+                OnSensedExit?.Invoke(other);
             }
         }
 
