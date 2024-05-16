@@ -5,13 +5,13 @@ using SensenToolkit.Pools;
 
 namespace Sensen.Components
 {
-    public abstract class PrefabPoolBase<TPooled, TPrefab> : MonoBehaviour, ISimplePool<TPooled>
+    public abstract class PrefabPoolBase<TPooled, TPrefab> : MonoBehaviour, IReleasablePool<TPooled>
     where TPrefab : Component
     {
         [SerializeField] protected TPrefab _prefab;
         [SerializeField] protected int _minSize = 20;
         [SerializeField] protected int _maxCreations = 50;
-        private ISimplePool<TPooled> _pool;
+        private IReleasablePool<TPooled> _pool;
         public HashSet<TPooled> Creations => _pool?.Creations;
 
         [LnxInit]
