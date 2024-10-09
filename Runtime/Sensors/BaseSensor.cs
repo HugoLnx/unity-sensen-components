@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using MyBox;
 using UnityEngine;
 
 namespace SensenToolkit.Sensors
@@ -11,6 +12,7 @@ namespace SensenToolkit.Sensors
         #region Properties
         [SerializeField] private string[] _onlyTags;
         private Transform _oneSensed;
+
         public readonly HashSet<Transform> Sensed = new();
         public bool IsSensing => Sensed.Count > 0;
         public Transform OneSensed => IsSensing ? GetOneSensed() : null;
@@ -79,5 +81,16 @@ namespace SensenToolkit.Sensors
             return _oneSensed;
         }
         #endregion
+
+#if UNITY_EDITOR
+        [SerializeField]
+        [ReadOnly]
+        private bool _debugIsSensing;
+
+        private void Update()
+        {
+            _debugIsSensing = IsSensing;
+        }
+#endif
     }
 }
