@@ -15,6 +15,7 @@ namespace SensenToolkit.Sensors
 
         public readonly HashSet<GameObject> Sensed = new();
         public readonly HashSet<SensorTarget> _sensedTargets = new();
+        public readonly List<SensorTarget> _sensedTargetsBuffer = new();
         public bool IsSensing => Sensed.Count > 0;
         public GameObject OneSensed => IsSensing ? GetOneSensed() : null;
         #endregion
@@ -90,7 +91,9 @@ namespace SensenToolkit.Sensors
 
         private void ClearTargets()
         {
-            foreach (SensorTarget target in _sensedTargets)
+            _sensedTargetsBuffer.Clear();
+            _sensedTargetsBuffer.AddRange(_sensedTargets);
+            foreach (SensorTarget target in _sensedTargetsBuffer)
             {
                 ExitTarget(target);
             }
