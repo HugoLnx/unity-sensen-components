@@ -1,5 +1,5 @@
 using System;
-using SensenToolkit.Rand;
+using SensenToolkit;
 using UnityEngine;
 
 namespace Sensen.Components

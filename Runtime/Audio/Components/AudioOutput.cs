@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using SensenToolkit.Coroutines;
+using SensenToolkit;
 using UnityEngine;
 
 namespace Sensen.Components

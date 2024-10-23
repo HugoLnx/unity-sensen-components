@@ -1,13 +1,11 @@
 ﻿#if DOTWEEN
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using EasyButtons;
 using TMPro;
-using Sensen.Toolkit;
+using SensenToolkit;
 
 namespace Sensen.Components
 {

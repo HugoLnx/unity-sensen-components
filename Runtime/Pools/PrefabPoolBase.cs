@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using LnxArch;
-using SensenToolkit.Pools;
+using SensenToolkit;
 
 namespace Sensen.Components
 {

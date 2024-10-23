@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SensenToolkit.Animations
+namespace SensenComponents
 {
     public readonly struct AnimatorPlaybackState
     {
