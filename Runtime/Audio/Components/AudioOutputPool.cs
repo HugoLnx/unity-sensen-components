@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Sensen.Components
 {
-    public class AudioOutputPool : PrefabPoolBase<AudioOutput, AudioSource>
+    public class AudioOutputPool : PrefabPoolBase<AudioOutputPool, AudioOutput, AudioSource>
     {
         [SerializeField] private bool _debug;
         private const float PitchPrecision = 1e2f;

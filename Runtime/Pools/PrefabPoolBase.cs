@@ -5,8 +5,9 @@ using SensenToolkit;
 
 namespace Sensen.Components
 {
-    public abstract class PrefabPoolBase<TPooled, TPrefab> : MonoBehaviour, IReleasablePool<TPooled>
+    public abstract class PrefabPoolBase<TPool, TPooled, TPrefab> : ATransientSingleton<TPool>, IReleasablePool<TPooled>
     where TPrefab : Component
+    where TPool : PrefabPoolBase<TPool, TPooled, TPrefab>
     {
         [SerializeField] protected TPrefab _prefab;
         [SerializeField] protected int _minSize = 20;
@@ -14,9 +15,9 @@ namespace Sensen.Components
         private IReleasablePool<TPooled> _pool;
         public HashSet<TPooled> Creations => _pool?.Creations;
 
-        [LnxInit]
-        protected void BaseInit()
+        protected override void AwakeSingleton()
         {
+            base.AwakeSingleton();
             SimpleExpandablePool<TPooled> pool = new(
                 factory: InstantiateNew,
                 minSize: _minSize,
