@@ -1,20 +1,13 @@
-using LnxArch;
+using MyBox;
 using UnityEngine;
 
 namespace SensenComponents
 {
+    [RequireComponent(typeof(Animator))]
     public class AnimatorPlayer : MonoBehaviour
     {
         #region Properties
-        private Animator _animator;
-        #endregion
-
-        #region Constructors
-        [LnxInit]
-        private void Init(Animator animator)
-        {
-            _animator = animator;
-        }
+        [SerializeField, AutoProperty] private Animator _animator;
         #endregion
 
         #region Public
