@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -52,6 +53,15 @@ namespace SensenComponents
             else
             {
                 return AnimatorPlaybackState.None;
+            }
+        }
+
+        public IEnumerator WaitForCompletion(float delay = 0.15f)
+        {
+            WaitForSeconds wait = new(delay);
+            while (GetCurrentState().IsPlaying)
+            {
+                yield return wait;
             }
         }
 
