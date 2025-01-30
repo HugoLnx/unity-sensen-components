@@ -2,22 +2,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using LnxArch;
 using SensenToolkit;
+using MyBox;
 
 namespace Sensen.Components
 {
-    public abstract class PrefabPoolBase<TPool, TPooled, TPrefab> : ATransientSingleton<TPool>, IReleasablePool<TPooled>
+    public abstract class APrefabPoolBase<TPooled, TPrefab> : MonoBehaviour, IReleasablePool<TPooled>
     where TPrefab : Component
-    where TPool : PrefabPoolBase<TPool, TPooled, TPrefab>
     {
-        [SerializeField] protected TPrefab _prefab;
-        [SerializeField] protected int _minSize = 20;
-        [SerializeField] protected int _maxCreations = 50;
+        [SerializeField, InitializationField] protected TPrefab _prefab;
+        [SerializeField, InitializationField] protected int _minSize = 20;
+        [SerializeField, InitializationField] protected int _maxCreations = 50;
         private IReleasablePool<TPooled> _pool;
         public HashSet<TPooled> Creations => _pool?.Creations;
 
-        protected override void AwakeSingleton()
+        protected virtual void Awake()
         {
-            base.AwakeSingleton();
             SimpleExpandablePool<TPooled> pool = new(
                 factory: InstantiateNew,
                 minSize: _minSize,
@@ -38,6 +37,6 @@ namespace Sensen.Components
             _pool.Release(resource);
         }
 
-        protected abstract TPooled InstantiateNew();
+        protected abstract TPooled InstantiateNew(SimpleExpandablePool<TPooled> pool);
     }
 }

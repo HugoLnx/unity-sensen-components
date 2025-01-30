@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using LnxArch;
+using SensenToolkit;
 using UnityEngine;
 
 namespace Sensen.Components
 {
-    public class AudioOutputPool : PrefabPoolBase<AudioOutputPool, AudioOutput, AudioSource>
+    public class AudioOutputPool : APrefabPoolBase<AudioOutput, AudioSource>
     {
         [SerializeField] private bool _debug;
         private const float PitchPrecision = 1e2f;
@@ -50,7 +51,7 @@ namespace Sensen.Components
             }
         }
 
-        protected override AudioOutput InstantiateNew()
+        protected override AudioOutput InstantiateNew(SimpleExpandablePool<AudioOutput> _)
         {
             AudioSource source = Instantiate(_prefab, this.transform);
             source.name = $"[{Creations.Count+1}] {_prefab.name}";
