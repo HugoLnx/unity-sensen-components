@@ -11,7 +11,12 @@ namespace SensenComponents
         #endregion
 
         #region Public
-        public AnimatorPlayback Play(int stateHash, int layer = 0, float normalizedStartAt = 0f, float normalizedTransitionDuration = 0f)
+        public AnimatorPlayback Play(
+            int stateHash,
+            int layer = -1,
+            float normalizedStartAt = float.NegativeInfinity,
+            float normalizedTransitionDuration = 0f
+        )
         {
             if (normalizedTransitionDuration == 0f)
             {
@@ -28,7 +33,12 @@ namespace SensenComponents
             }
             return AfterPlay(stateHash, layer);
         }
-        public AnimatorPlayback PlayInFixedTime(int stateHash, int layer = 0, float fixedStartAt = 0f, float fixedTransitionDuration = 0f)
+        public AnimatorPlayback PlayInFixedTime(
+            int stateHash,
+            int layer = -1,
+            float fixedStartAt = float.NegativeInfinity,
+            float fixedTransitionDuration = 0f
+        )
         {
             if (fixedTransitionDuration == 0f)
             {
@@ -46,11 +56,19 @@ namespace SensenComponents
             return AfterPlay(stateHash, layer);
         }
 
-        public AnimatorPlayback Play(string stateName, int layer = 0, float normalizedStartAt = 0f, float normalizedTransitionDuration = 0f)
-            => Play(Animator.StringToHash(stateName), layer, normalizedStartAt, normalizedTransitionDuration);
+        public AnimatorPlayback Play(
+            string stateName,
+            int layer = -1,
+            float normalizedStartAt = float.NegativeInfinity,
+            float normalizedTransitionDuration = 0f
+        ) => Play(Animator.StringToHash(stateName), layer, normalizedStartAt, normalizedTransitionDuration);
 
-        public AnimatorPlayback PlayInFixedTime(string stateName, int layer = 0, float fixedStartAt = 0f, float fixedTransitionDuration = 0f)
-            => PlayInFixedTime(Animator.StringToHash(stateName), layer, fixedStartAt, fixedTransitionDuration);
+        public AnimatorPlayback PlayInFixedTime(
+            string stateName,
+            int layer = -1,
+            float fixedStartAt = float.NegativeInfinity,
+            float fixedTransitionDuration = 0f
+        ) => PlayInFixedTime(Animator.StringToHash(stateName), layer, fixedStartAt, fixedTransitionDuration);
         #endregion
 
         #region Private
