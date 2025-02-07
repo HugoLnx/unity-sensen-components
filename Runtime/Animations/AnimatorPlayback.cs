@@ -13,19 +13,19 @@ namespace SensenComponents
         private readonly int _layer;
         private List<AnimatorClipInfo> _clipsBuffer = new();
 
-        public AnimatorPlayback(Animator animator, Func<AnimatorStateInfo, bool> identifyState, int layer = 0)
+        public AnimatorPlayback(Animator animator, Func<AnimatorStateInfo, bool> identifyState, int layer = -1)
         {
             _identifyState = identifyState;
-            _layer = layer;
+            _layer = FixLayer(layer);
             _animator = animator;
         }
 
-        public static AnimatorPlayback BuildForHash(Animator animator, int hash, int layer = 0)
+        public static AnimatorPlayback BuildForHash(Animator animator, int hash, int layer = -1)
         {
             return new AnimatorPlayback(
                 animator: animator,
                 identifyState: state => state.fullPathHash == hash || state.shortNameHash == hash,
-                layer: layer
+                layer: FixLayer(layer)
             );
         }
 
@@ -65,10 +65,10 @@ namespace SensenComponents
             }
         }
 
-        private AnimationClip GetCurrentFirstClip(int layer)
+        private AnimationClip GetCurrentFirstClip(int? layer = null)
         {
             _clipsBuffer.Clear();
-            _animator.GetCurrentAnimatorClipInfo(_layer, _clipsBuffer);
+            _animator.GetCurrentAnimatorClipInfo(FixLayer(layer ?? _layer), _clipsBuffer);
             if (_clipsBuffer.Count == 0)
             {
                 return null;
@@ -76,10 +76,10 @@ namespace SensenComponents
             return _clipsBuffer[0].clip;
         }
 
-        private AnimationClip GetNextFirstClip(int layer)
+        private AnimationClip GetNextFirstClip(int? layer = null)
         {
             _clipsBuffer.Clear();
-            _animator.GetNextAnimatorClipInfo(_layer, _clipsBuffer);
+            _animator.GetNextAnimatorClipInfo(FixLayer(layer ?? _layer), _clipsBuffer);
             if (_clipsBuffer.Count == 0)
             {
                 return null;
@@ -96,5 +96,7 @@ namespace SensenComponents
             }
             return null;
         }
+
+        private static int FixLayer(int layer) => Mathf.Max(0, layer);
     }
 }
