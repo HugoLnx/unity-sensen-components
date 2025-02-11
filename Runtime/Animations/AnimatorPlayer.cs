@@ -69,6 +69,14 @@ namespace SensenComponents
             float fixedStartAt = float.NegativeInfinity,
             float fixedTransitionDuration = 0f
         ) => PlayInFixedTime(Animator.StringToHash(stateName), layer, fixedStartAt, fixedTransitionDuration);
+
+        public bool IsPlaying(int stateHash, int layer = -1)
+        {
+            int layerFixed = FixLayer(layer);
+            AnimatorStateInfo currentState = _animator.GetCurrentAnimatorStateInfo(layerFixed);
+            AnimatorStateInfo nextState = _animator.GetNextAnimatorStateInfo(layerFixed);
+            return IsValidStateOfHash(currentState, stateHash) || IsValidStateOfHash(nextState, stateHash);
+        }
         #endregion
 
         #region Private
@@ -84,5 +92,18 @@ namespace SensenComponents
             _animator.Update(0f);
         }
         #endregion
+
+        internal static bool IsValidStateOfHash(AnimatorStateInfo state, int hash)
+        {
+            bool isBlankState = state.fullPathHash == 0;
+            return !isBlankState && IsMatchingHash(state, hash);
+        }
+
+        private static bool IsMatchingHash(AnimatorStateInfo state, int hash)
+        {
+            return state.fullPathHash == hash || state.shortNameHash == hash;
+        }
+
+        internal static int FixLayer(int layer) => Mathf.Max(0, layer);
     }
 }
