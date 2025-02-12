@@ -13,6 +13,12 @@ namespace Sensen.Components
         public PoolConfig Config;
     }
 
+    public struct PoolNode
+    {
+        public Component Prefab;
+        public SimpleExpandablePool<Component> Pool;
+    }
+
     public class PrefabPools : ATransientSingleton<PrefabPools>
     {
         [SerializeField]
@@ -23,7 +29,7 @@ namespace Sensen.Components
             Prefill = true
         };
         [SerializeField, InitializationField] private PredefinedPoolConfig[] _predefinedPoolsConfig;
-        private Dictionary<Component, SimpleExpandablePool<Component>> _pools = new();
+        private Dictionary<GameObject, PoolNode> _pools = new();
 
         public delegate void OnPoolCreatedAction(Component prefab, SimpleExpandablePool<Component> pool);
         private event OnPoolCreatedAction OnPoolCreated = delegate { };
@@ -39,16 +45,23 @@ namespace Sensen.Components
 
         public void ExecuteOncePerPool(OnPoolCreatedAction action)
         {
-            foreach ((Component prefab, SimpleExpandablePool<Component> pool) in _pools)
+            foreach ((GameObject objKey, PoolNode poolNode) in _pools)
             {
-                action(prefab, pool);
+                action(poolNode.Prefab, poolNode.Pool);
             }
             OnPoolCreated += action;
         }
 
         public T GetInstanceOf<T>(T prefab) where T : Component
         {
-            return EnsurePool(prefab).Get() as T;
+            Component instance = EnsurePool(prefab).Get();
+            var typedInstance = instance as T;
+            if (typedInstance == null) typedInstance = instance.GetComponent<T>();
+            if (typedInstance == null)
+            {
+                throw new ArgumentException($"Prefab {prefab.name} is not of type {typeof(T).Name}.");
+            }
+            return typedInstance;
         }
 
         public void ReleaseInstanceOf<T>(T prefab, T instance) where T : Component
@@ -58,9 +71,10 @@ namespace Sensen.Components
 
         private SimpleExpandablePool<Component> EnsurePool(Component prefab)
         {
-            if (_pools.TryGetValue(prefab, out SimpleExpandablePool<Component> pool))
+            GameObject objKey = prefab.gameObject;
+            if (_pools.TryGetValue(objKey, out PoolNode poolNode))
             {
-                return pool;
+                return poolNode.Pool;
             }
 
             return AddPool(prefab, _defaultConfig);
@@ -68,7 +82,8 @@ namespace Sensen.Components
 
         private SimpleExpandablePool<Component> AddPool(Component prefab, PoolConfig config)
         {
-            if (_pools.ContainsKey(prefab))
+            GameObject objKey = prefab.gameObject;
+            if (_pools.ContainsKey(objKey))
             {
                 throw new ArgumentException($"Pool for {prefab.name} was added twice.");
             }
@@ -85,7 +100,7 @@ namespace Sensen.Components
                 maxCreations: config.MaxCreations,
                 prefill: config.Prefill
             );
-            _pools.Add(prefab, pool);
+            _pools.Add(objKey, new PoolNode { Prefab = prefab, Pool = pool });
             OnPoolCreated.Invoke(prefab, pool);
             return pool;
         }
