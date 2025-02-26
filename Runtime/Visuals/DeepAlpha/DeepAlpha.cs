@@ -232,7 +232,8 @@ namespace Sensen.Components
                     v => Alpha = v,
                     duration: duration,
                     startValue: Alpha,
-                    endValue: 1f
+                    endValue: 1f,
+                    setImmediately: true
                 )
                 .SetEase(ease);
 
@@ -241,7 +242,8 @@ namespace Sensen.Components
                 v => Alpha = v,
                 duration: duration,
                 startValue: Alpha,
-                endValue: 0f
+                endValue: 0f,
+                setImmediately: true
             )
             .SetEase(ease);
     }
