@@ -227,7 +227,7 @@ namespace Sensen.Components
         }
 
         public Tween FadeIn(float duration, Ease ease = Ease.InSine)
-            => SimpleTweening
+            => Tweenx
                 .FromTo(
                     v => Alpha = v,
                     duration: duration,
@@ -238,7 +238,7 @@ namespace Sensen.Components
                 .SetEase(ease);
 
         public Tween FadeOut(float duration, Ease ease = Ease.OutSine)
-            => SimpleTweening.FromTo(
+            => Tweenx.FromTo(
                 v => Alpha = v,
                 duration: duration,
                 startValue: Alpha,
