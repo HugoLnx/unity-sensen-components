@@ -26,7 +26,8 @@ namespace Sensen.Components
         {
             MinSize = 15,
             MaxCreations = 50,
-            Prefill = true
+            Prefill = true,
+            AutoDeactivate = true
         };
         [SerializeField, InitializationField] private PredefinedPoolConfig[] _predefinedPoolsConfig;
         private Dictionary<GameObject, PoolNode> _pools = new();
@@ -94,12 +95,18 @@ namespace Sensen.Components
                 {
                     Component instance = Instantiate(prefab, container.transform);
                     instance.name = $"[{pool.Creations.Count + 1}] {prefab.name}";
+                    if (config.AutoDeactivate) instance.gameObject.SetActive(false);
                     return instance;
                 },
                 minSize: config.MinSize,
                 maxCreations: config.MaxCreations,
                 prefill: config.Prefill
             );
+            if (config.AutoDeactivate)
+            {
+                pool.OnBeforeGetInstance += (instance) => instance.gameObject.SetActive(true);
+                pool.OnAfterReleaseInstance += (instance) => instance.gameObject.SetActive(false);
+            }
             _pools.Add(objKey, new PoolNode { Prefab = prefab, Pool = pool });
             OnPoolCreated.Invoke(prefab, pool);
             return pool;
