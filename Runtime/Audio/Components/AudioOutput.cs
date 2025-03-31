@@ -14,8 +14,8 @@ namespace Sensen.Components
         public bool Loop { get => _source.loop; set => _source.loop = value; }
         public AudioTrack Track { get; private set; }
         public bool IsPlaying { get; private set; }
-        private float TrackVolumeModifier => Track?.VolumeModifier ?? 1f;
-        private bool TrackMute => Track?.Mute == true;
+        private float TrackVolumeModifier => Track == null ? 1f : Track.VolumeModifier;
+        private bool TrackMute => Track != null && Track.Mute == true;
 
         public string SourceName => _source.name;
 
@@ -50,7 +50,8 @@ namespace Sensen.Components
                 _source.clip = clip;
                 _source.Play();
             }
-            else {
+            else
+            {
                 _source.clip = null;
                 _source.PlayOneShot(clip, Volume);
             }
@@ -81,9 +82,9 @@ namespace Sensen.Components
 
         public void UpdateTrack(AudioTrack track)
         {
-            Track?.Unregister(this);
+            if (Track != null) Track.Unregister(this);
             Track = track;
-            Track?.Register(this);
+            if (Track != null) Track.Register(this);
             RefreshSource();
         }
 
@@ -95,7 +96,8 @@ namespace Sensen.Components
             {
                 _source.volume = Volume * VolumeModifier * TrackVolumeModifier;
             }
-            else {
+            else
+            {
                 _source.volume = VolumeModifier * TrackVolumeModifier;
             }
             _source.mute = Mute || TrackMute;

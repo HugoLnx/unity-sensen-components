@@ -1,9 +1,6 @@
-using LnxArch;
-
 namespace Sensen.Components
 {
-    [LnxService]
-    public class SfxService : AudioPlayerBase
+    public class SfxService : AudioPlayerBase<SfxService>
     {
     }
 }

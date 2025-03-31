@@ -1,22 +1,17 @@
 using System;
-using LnxArch;
+using MyBox;
+using SensenToolkit;
 using UnityEngine;
 
 namespace Sensen.Components
 {
-    public abstract class AudioPlayerBase : MonoBehaviour
+    public abstract class AudioPlayerBase<T> : APermanentSingleton<T>
+    where T : APermanentSingleton<T>
     {
-        [SerializeField] private float _globalVolume = 1f;
+        [SerializeField, Range(0f, 1f)] private float _globalVolume = 1f;
         [SerializeField] private bool _isMuted;
+        [SerializeField, AutoProperty(AutoPropertyMode.Scene)]
         private AudioOutputPool _outputPool;
-
-        [LnxInit]
-        protected void BaseInit(
-            [FromLocalChild] AudioOutputPool outputPool = null
-        )
-        {
-            _outputPool = outputPool;
-        }
 
         public void Play(AudioProfile profile, AudioTrack track = null, Action onFinished = null)
         {
@@ -25,10 +20,10 @@ namespace Sensen.Components
 
         public void Play(AudioPlaybackCommand command, Action onFinished = null)
         {
-            AudioOutput output = command.Loop || command.UseGlobalTrack ? _outputPool?.Get() : _outputPool?.GetReusable(command.Pitch);
+            AudioOutput output = command.Loop || command.UseGlobalTrack ? _outputPool.Get() : _outputPool.GetReusable(command.Pitch);
             if (output == null)
             {
-                Debug.LogWarning($"[{nameof(AudioPlayerBase)}] No audio output available. Abort playing {command.Clip.name}");
+                Debug.LogWarning($"[{nameof(T)}] No audio output available. Abort playing {command.Clip.name}");
                 return;
             }
             output.UpdateVolume(modifier: _globalVolume);

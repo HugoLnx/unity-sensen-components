@@ -9,12 +9,15 @@ namespace Sensen.Components
         [field: SerializeField]
         public AudioClip[] Clips { get; private set; }
         [field: SerializeField]
-        public bool RandomizeClips { get; private set; } = false;
+        public bool RandomizeClips { get; private set; } = true;
         [field: SerializeField]
         public AudioTrack Track { get; private set; }
-        [field: SerializeField]
-        [field: Range(0f, 1f)]
+        [field: SerializeField, Range(0f, 2f)]
         public float Volume { get; private set; } = 1f;
+
+        [field: SerializeField]
+        public AudioPlaybackProfileBase PlaybackProfile { get; private set; }
+
         private RandomWithVariability _random;
         private RandomWithVariability VarRandom => _random ??= new(
             optionsAmount: Clips.Length,
@@ -24,17 +27,16 @@ namespace Sensen.Components
 
         private int _clipIndex = 0;
 
-        [field: SerializeField]
-        public AudioPlaybackProfileBase PlaybackProfile { get; private set; }
-
-        public AudioPlaybackCommand GetCommand(AudioTrack track = null)
+        public AudioPlaybackCommand GetCommand(AudioTrack track = null, float volumeModifier = 1f)
         {
+            if (track == null) track = Track;
+            if (track == null) track = AudioTrack.Global;
             return new AudioPlaybackCommand(
                 clip: ChooseClip(),
-                volume: PlaybackProfile.Volume * Volume,
+                volume: PlaybackProfile.Volume * Volume * volumeModifier,
                 loop: PlaybackProfile.Loop,
                 pitch: PlaybackProfile.ChoosePitch(),
-                track: track ?? Track ?? AudioTrack.Global
+                track: track
             );
         }
 

@@ -7,18 +7,17 @@ namespace Sensen.Components
     [CreateAssetMenu(fileName = "AudioPlaybackVaryingProfile", menuName = "Sensen/Audio/PlaybackVaryingProfile", order = 1)]
     public class AudioPlaybackVaryingProfile : AudioPlaybackProfileBase
     {
-        [SerializeField]
-        [Range(0f, 2f)]
-        private float _minPitch = .5f;
-        [SerializeField]
-        [Range(0f, 2f)]
-        private float _maxPitch = 1.5f;
-        [SerializeField]
-        private int _pitchSteps = 5;
-        [SerializeField]
-        private bool _randomPitch = false;
-        [SerializeField]
-        private float _delayToResetPitch = 1f;
+        [SerializeField, Range(0f, 2f)] private float _minPitch = .5f;
+        [SerializeField, Range(0f, 2f)] private float _maxPitch = 1.5f;
+
+        [Tooltip("Pitch will have those steps between min and max")]
+        [SerializeField] private int _pitchSteps = 5;
+
+        [Tooltip("Changes pitch randomly or chooses circularly (Round-Robin)")]
+        [SerializeField] private bool _randomPitch = true;
+
+        [Tooltip("To automatic reset the circular getting pitch after a delay")]
+        [SerializeField] private float _delayToResetPitch = 0f;
 
         private int _step;
         private float _getPitchTime;

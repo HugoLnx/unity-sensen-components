@@ -5,8 +5,7 @@ namespace Sensen.Components
 {
     public abstract class AudioPlaybackProfileBase : ScriptableObject
     {
-        [field: SerializeField]
-        [field: Range(0f, 1f)]
+        [field: SerializeField, Range(0f, 2f)]
         public float Volume { get; protected set; } = 1f;
 
         [field: SerializeField]

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,12 +8,14 @@ namespace Sensen.Components
     public class AudioTrack : ScriptableObject
     {
         [field: SerializeField] public bool Mute { get; private set; } = false;
-        [field: SerializeField] public float ConfiguredVolumeModifier { get; private set; } = 1f;
+        [field: SerializeField, Range(0f, 1f)]
+        public float ConfiguredVolumeModifier { get; private set; } = 0.5f;
         public float TmpVolumeModifier { get; private set; } = 1f;
         public float VolumeModifier => ConfiguredVolumeModifier * TmpVolumeModifier;
         public virtual bool IsGlobal => false;
-        public static AudioTrack Global => _globalTrack ??= CreateInstance<GlobalAudioTrack>();
-        private static AudioTrack _globalTrack;
+        public static AudioTrack Global => EnsureGlobalTrack();
+
+        private static AudioTrack s_globalTrack;
         private readonly HashSet<AudioOutput> _outputs = new();
 
         private void OnEnable()
@@ -57,6 +60,18 @@ namespace Sensen.Components
             {
                 output.RefreshSource();
             }
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void InitializeStatics()
+        {
+            EnsureGlobalTrack(forceRecreate: true);
+        }
+        private static AudioTrack EnsureGlobalTrack(bool forceRecreate = false)
+        {
+            if (forceRecreate || s_globalTrack != null) return s_globalTrack;
+            s_globalTrack = CreateInstance<GlobalAudioTrack>();
+            return s_globalTrack;
         }
     }
 }

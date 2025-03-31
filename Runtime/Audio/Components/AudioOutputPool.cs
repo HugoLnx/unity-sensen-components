@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using LnxArch;
 using SensenToolkit;
 using UnityEngine;
 
@@ -20,7 +19,8 @@ namespace Sensen.Components
             {
                 _pitchedOutputsCount[pitchKey]++;
             }
-            else {
+            else
+            {
                 output = Get();
                 _pitchedOutputs.Add(pitchKey, output);
                 _pitchedOutputsCount.Add(pitchKey, 1);
@@ -54,7 +54,7 @@ namespace Sensen.Components
         protected override AudioOutput InstantiateNew(SimpleExpandablePool<AudioOutput> _)
         {
             AudioSource source = Instantiate(_prefab, this.transform);
-            source.name = $"[{Creations.Count+1}] {_prefab.name}";
+            source.name = $"[{Creations.Count + 1}] {_prefab.name}";
             AudioOutput output = new(source, this);
             output.OnFinishedPlaying += Release;
             return output;
