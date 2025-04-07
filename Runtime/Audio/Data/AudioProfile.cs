@@ -12,7 +12,7 @@ namespace Sensen.Components
         public bool RandomizeClips { get; private set; } = true;
         [field: SerializeField]
         public AudioTrack Track { get; private set; }
-        [field: SerializeField, Range(0f, 2f)]
+        [field: SerializeField, Range(0f, 4f)]
         public float Volume { get; private set; } = 1f;
 
         [field: SerializeField]
