@@ -38,6 +38,10 @@ namespace Sensen.Components
             Volume = command.Volume;
             Loop = command.Loop;
             Pitch = command.Pitch;
+            Audio3DSettings settings3d = command.Settings3D == null ? Audio3DSettings.Default : command.Settings3D;
+            settings3d.ApplyToSource(_source);
+
+            _source.transform.position = command.Position ?? Vector3.zero;
             Play(command.Clip, onFinished);
         }
 

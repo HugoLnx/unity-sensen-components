@@ -1,3 +1,5 @@
+using System;
+using MyBox;
 using SensenToolkit;
 using UnityEngine;
 
@@ -17,6 +19,10 @@ namespace Sensen.Components
 
         [field: SerializeField]
         public AudioPlaybackProfileBase PlaybackProfile { get; private set; }
+        [field: SerializeField]
+        public bool Enable3D { get; private set; } = false;
+        [field: SerializeField, ConditionalField(useMethod: true, method: nameof(Is3DEnabled))]
+        public Audio3DSettings Settings3D { get; private set; }
 
         private RandomWithVariability _random;
         private RandomWithVariability VarRandom => _random ??= new(
@@ -27,7 +33,11 @@ namespace Sensen.Components
 
         private int _clipIndex = 0;
 
-        public AudioPlaybackCommand GetCommand(AudioTrack track = null, float volumeModifier = 1f)
+        public AudioPlaybackCommand GetCommand(
+            AudioTrack track = null,
+            Vector3? position = null,
+            float volumeModifier = 1f
+        )
         {
             if (track == null) track = Track;
             if (track == null) track = AudioTrack.Global;
@@ -36,7 +46,9 @@ namespace Sensen.Components
                 volume: PlaybackProfile.Volume * Volume * volumeModifier,
                 loop: PlaybackProfile.Loop,
                 pitch: PlaybackProfile.ChoosePitch(),
-                track: track
+                track: track,
+                settings3d: Enable3D ? Settings3D : null,
+                position: position
             );
         }
 
@@ -48,5 +60,7 @@ namespace Sensen.Components
             _clipIndex = (_clipIndex + 1) % Clips.Length;
             return clip;
         }
+
+        private bool Is3DEnabled() => Enable3D;
     }
 }

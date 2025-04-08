@@ -13,9 +13,18 @@ namespace Sensen.Components
         [SerializeField, AutoProperty(AutoPropertyMode.Scene)]
         private AudioOutputPool _outputPool;
 
-        public void Play(AudioProfile profile, AudioTrack track = null, Action onFinished = null)
+        public void Play(
+            AudioProfile profile,
+            Vector3? position = null,
+            AudioTrack track = null,
+            Action onFinished = null
+        )
         {
-            Play(profile.GetCommand(track: track), onFinished);
+            AudioPlaybackCommand command = profile.GetCommand(
+                track: track,
+                position: position
+            );
+            Play(command, onFinished);
         }
 
         public void Play(AudioPlaybackCommand command, Action onFinished = null)
