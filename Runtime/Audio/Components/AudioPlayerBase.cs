@@ -13,7 +13,7 @@ namespace Sensen.Components
         [SerializeField, AutoProperty(AutoPropertyMode.Scene)]
         private AudioOutputPool _outputPool;
 
-        public void Play(
+        public AudioOutput Play(
             AudioProfile profile,
             Vector3? position = null,
             AudioTrack track = null,
@@ -24,20 +24,21 @@ namespace Sensen.Components
                 track: track,
                 position: position
             );
-            Play(command, onFinished);
+            return Play(command, onFinished);
         }
 
-        public void Play(AudioPlaybackCommand command, Action onFinished = null)
+        public AudioOutput Play(AudioPlaybackCommand command, Action onFinished = null)
         {
             AudioOutput output = command.Loop || command.UseGlobalTrack ? _outputPool.Get() : _outputPool.GetReusable(command.Pitch);
             if (output == null)
             {
                 Debug.LogWarning($"[{nameof(T)}] No audio output available. Abort playing {command.Clip.name}");
-                return;
+                return null;
             }
             output.UpdateVolume(modifier: _globalVolume);
             output.UpdateTrack(command.Track);
             output.Play(command, onFinished);
+            return output;
         }
         public void SetIsAudible(bool isAudible)
         {

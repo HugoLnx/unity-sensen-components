@@ -53,15 +53,23 @@ namespace Sensen.Components
             {
                 _source.clip = clip;
                 _source.Play();
+
+                void OnFinished(AudioOutput output)
+                {
+                    onFinished?.Invoke();
+                    OnFinishedPlaying -= OnFinished;
+                }
+
+                OnFinishedPlaying += OnFinished;
             }
             else
             {
                 _source.clip = null;
                 _source.PlayOneShot(clip, Volume);
-            }
-            if (onFinished != null)
-            {
-                _mono.StartCoroutine(ScheduleOnFinished(onFinished, clip.length));
+                if (onFinished != null)
+                {
+                    _mono.StartCoroutine(ScheduleOnFinished(onFinished, clip.length));
+                }
             }
         }
 
