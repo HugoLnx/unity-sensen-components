@@ -23,6 +23,7 @@ namespace Sensen.Components
         public bool Enable3D { get; private set; } = false;
         [field: SerializeField, ConditionalField(useMethod: true, method: nameof(Is3DEnabled))]
         public Audio3DSettings Settings3D { get; private set; }
+        public AudioClip LastPlayedClip { get; private set; }
 
         private RandomWithVariability _random;
         private RandomWithVariability VarRandom => _random ??= new(
@@ -57,6 +58,7 @@ namespace Sensen.Components
             if (Clips.Length == 0) return null;
             if (RandomizeClips) return Clips[VarRandom.Select()];
             AudioClip clip = Clips[_clipIndex];
+            LastPlayedClip = clip;
             _clipIndex = (_clipIndex + 1) % Clips.Length;
             return clip;
         }
