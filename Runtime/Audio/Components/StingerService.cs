@@ -13,6 +13,13 @@ namespace Sensen.Components
         [SerializeField, AutoProperty(AutoPropertyMode.Scene)]
         private MusicService _musicService;
 
+        protected override void AwakeSingleton()
+        {
+            base.AwakeSingleton();
+            _sfxService = SfxService.Instance;
+            _musicService = MusicService.Instance;
+        }
+
         protected override void OnDisableSingleton()
         {
             _musicService.UnlockLowVolume(this);
