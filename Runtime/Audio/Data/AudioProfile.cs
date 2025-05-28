@@ -56,10 +56,17 @@ namespace Sensen.Components
         private AudioClip ChooseClip()
         {
             if (Clips.Length == 0) return null;
-            if (RandomizeClips) return Clips[VarRandom.Select()];
-            AudioClip clip = Clips[_clipIndex];
+            AudioClip clip = null;
+            if (RandomizeClips)
+            {
+                clip = Clips[VarRandom.Select()];
+            }
+            else
+            {
+                clip = Clips[_clipIndex];
+                _clipIndex = (_clipIndex + 1) % Clips.Length;
+            }
             LastPlayedClip = clip;
-            _clipIndex = (_clipIndex + 1) % Clips.Length;
             return clip;
         }
 
