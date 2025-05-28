@@ -35,7 +35,7 @@ namespace Sensen.Components
 
         public AudioOutput Play(AudioPlaybackCommand command, Action onFinished = null)
         {
-            AudioOutput output = command.Loop || command.UseGlobalTrack ? _outputPool.Get() : _outputPool.GetReusable(command.Pitch);
+            AudioOutput output = _outputPool.Get();
             if (output == null)
             {
                 Debug.LogWarning($"[{nameof(T)}] No audio output available. Abort playing {command.Clip.name}");
