@@ -35,6 +35,7 @@ namespace Sensen.Components
 
         private IEnumerator PlayStinger(AudioProfile stinger)
         {
+            Assertx.IsNotNull(stinger, "Stinger cannot be null.");
             bool stingerHasFinished = false;
             _sfxService.Play(
                 stinger,
@@ -42,6 +43,7 @@ namespace Sensen.Components
                 onFinished: () => stingerHasFinished = true
             );
             AudioClip clip = stinger.LastPlayedClip;
+            Assertx.IsNotNull(clip, $"Stinger {stinger.name} has no audio clip to play.");
             yield return new WaitForSeconds(0.25f);
             _musicService.LockLowVolume(this);
             yield return new WaitForSeconds(clip.length - 0.25f);
