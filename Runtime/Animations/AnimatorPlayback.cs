@@ -59,7 +59,7 @@ namespace SensenComponents
             }
         }
 
-        public IEnumerator WaitForCompletion(float delay = 0.15f)
+        public IEnumerator WaitForPlaybackEnd(float delay = 0.15f)
         {
             WaitForSeconds wait = new(delay);
             while (GetCurrentState().IsPlaying)
