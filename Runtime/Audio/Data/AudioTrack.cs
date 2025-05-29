@@ -49,6 +49,7 @@ namespace Sensen.Components
         {
             foreach (AudioOutput output in _outputs)
             {
+                if (output == null) continue;
                 output.Stop();
             }
             _outputs.Clear();
@@ -58,6 +59,7 @@ namespace Sensen.Components
         {
             foreach (AudioOutput output in _outputs)
             {
+                if (output == null) continue;
                 output.RefreshSource();
             }
         }
