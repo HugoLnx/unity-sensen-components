@@ -37,7 +37,7 @@ namespace Sensen.Components
         public AudioOutput Play(AudioPlaybackCommand command, Action onFinished = null)
         {
             AudioOutput output = _outputPool.Get();
-            if (output == null)
+            if (output == null || !output.IsValid)
             {
                 Debug.LogWarning($"[{nameof(T)}] No audio output available. Abort playing {command.Clip.name}");
                 return null;
@@ -94,6 +94,7 @@ namespace Sensen.Components
         {
             foreach (AudioOutput output in _outputPool.Creations)
             {
+                if (output == null || !output.IsValid) continue;
                 output.UpdateVolume(modifier: GlobalVolume);
                 output.UpdateMute(isMute: _isMuted);
             }

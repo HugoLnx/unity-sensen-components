@@ -19,6 +19,7 @@ namespace Sensen.Components
 
         public string SourceName => _source.name;
         public AudioSource Source => _source;
+        public bool IsValid => _source != null;
 
         private readonly AudioSource _source;
         private readonly MonoBehaviour _mono;
