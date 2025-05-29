@@ -17,6 +17,7 @@ namespace Sensen.Components
         private float _lowVolumeModifier = 1f;
 
         private float GlobalVolume => _globalVolume * _volumeModifier * _lowVolumeModifier;
+        public AudioOutput LastPlayedOutput { get; private set; }
         private HashSet<Component> _lowVolumeLocks = new();
 
         public AudioOutput Play(
@@ -41,6 +42,7 @@ namespace Sensen.Components
                 Debug.LogWarning($"[{nameof(T)}] No audio output available. Abort playing {command.Clip.name}");
                 return null;
             }
+            LastPlayedOutput = output;
             output.UpdateVolume(modifier: GlobalVolume);
             output.UpdateTrack(command.Track);
             output.Play(command, onFinished);

@@ -18,6 +18,7 @@ namespace Sensen.Components
         private bool TrackMute => Track != null && Track.Mute == true;
 
         public string SourceName => _source.name;
+        public AudioSource Source => _source;
 
         private readonly AudioSource _source;
         private readonly MonoBehaviour _mono;
