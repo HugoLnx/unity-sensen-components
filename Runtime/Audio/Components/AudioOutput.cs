@@ -36,6 +36,7 @@ namespace Sensen.Components
 
         public void Play(AudioPlaybackCommand command, Action onFinished = null)
         {
+            if (!IsValid) return;
             IsPlaying = true;
             Volume = command.Volume;
             Loop = command.Loop;
@@ -49,6 +50,8 @@ namespace Sensen.Components
 
         public void Play(AudioClip clip, Action onFinished = null)
         {
+            Assertx.IsNotNull(clip, "AudioOutput.Play: clip cannot be null");
+            if (!IsValid) return;
             IsPlaying = true;
             RefreshSource();
             if (Loop)
@@ -77,7 +80,7 @@ namespace Sensen.Components
 
         public void Stop()
         {
-            _source.Stop();
+            if (_source != null) _source.Stop();
             IsPlaying = false;
         }
 
@@ -106,6 +109,7 @@ namespace Sensen.Components
 
         internal void RefreshSource()
         {
+            if (!IsValid) return;
             if (_source.loop)
             {
                 _source.volume = Volume * VolumeModifier * TrackVolumeModifier;
@@ -121,8 +125,8 @@ namespace Sensen.Components
         {
             while (true)
             {
-                yield return new WaitUntil(() => _source.isPlaying);
-                yield return new WaitWhile(() => Time.timeScale == 0 || !Application.isFocused || !Application.isPlaying || _source.isPlaying);
+                yield return new WaitUntil(() => _source != null && _source.isPlaying);
+                yield return new WaitWhile(() => Time.timeScale == 0 || !Application.isFocused || !Application.isPlaying || _source == null || _source.isPlaying);
                 IsPlaying = false;
                 OnFinishedPlaying?.Invoke(this);
             }
@@ -131,6 +135,7 @@ namespace Sensen.Components
         private IEnumerator ScheduleOnFinished(Action onFinished, float clipLength)
         {
             yield return new WaitForSeconds(clipLength);
+            if (IsValid) yield break;
             onFinished?.Invoke();
         }
     }
