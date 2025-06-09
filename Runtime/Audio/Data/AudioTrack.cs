@@ -9,9 +9,12 @@ namespace Sensen.Components
     {
         [field: SerializeField] public bool Mute { get; private set; } = false;
         [field: SerializeField, Range(0f, 1f)]
-        public float ConfiguredVolumeModifier { get; private set; } = 0.5f;
-        public float TmpVolumeModifier { get; private set; } = 1f;
-        public float VolumeModifier => ConfiguredVolumeModifier * TmpVolumeModifier;
+        public float TrackVolumeModifier { get; private set; } = 0.7f;
+
+        [Tooltip("Volume reduction so individual tracks can up to 4x the volume")]
+        [SerializeField, Range(0f, 1f)] private float _volumeBaseReduction = 0.25f;
+        private float _tmpVolumeModifier = 1f;
+        public float VolumeModifier => TrackVolumeModifier * _volumeBaseReduction * _tmpVolumeModifier;
         public virtual bool IsGlobal => false;
         public static AudioTrack Global => EnsureGlobalTrack();
 
@@ -20,7 +23,7 @@ namespace Sensen.Components
 
         private void OnEnable()
         {
-            TmpVolumeModifier = 1f;
+            _tmpVolumeModifier = 1f;
         }
 
         internal void Register(AudioOutput output)
@@ -35,7 +38,13 @@ namespace Sensen.Components
 
         public void SetTmpVolumeModifier(float modifier)
         {
-            TmpVolumeModifier = modifier;
+            _tmpVolumeModifier = Mathf.Clamp01(modifier);
+            RefreshOutputs();
+        }
+
+        public void SetTrackVolumeModifier(float modifier)
+        {
+            TrackVolumeModifier = Mathf.Clamp01(modifier);
             RefreshOutputs();
         }
 
