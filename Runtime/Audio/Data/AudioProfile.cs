@@ -34,6 +34,13 @@ namespace Sensen.Components
 
         private int _clipIndex = 0;
 
+        private void Awake()
+        {
+            _random = null;
+            _clipIndex = 0;
+            LastPlayedClip = null;
+        }
+
         public AudioPlaybackCommand GetCommand(
             AudioTrack track = null,
             Vector3? position = null,
